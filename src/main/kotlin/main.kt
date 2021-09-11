@@ -30,7 +30,7 @@ fun lcsLength(first: String, second: String): Double {
             else if (first[i] == second[j]) lengths[i][j] = 1 + lengths[i + 1][j + 1]
             else lengths[i][j] = max(lengths[i + 1][j], lengths[i][j + 1])
         }
-    //Возвращает значение от 0.0 до 2.0
+    //Возвращает значение от 0.0 до 2.0 (смысл описан в stringComparator)
     return lengths[0][0].toDouble()
 }
 // Алгоритм lcs применённый для файла, чтобы найти наибольшую общую часть двух файлов (работает аналогично LCS)
@@ -43,13 +43,13 @@ fun /*longestCommonGroupOfStrings*/littoralCombatShip(
     for (i in baseText.size downTo 0)
         for (j in resultText.size downTo 0) {
             if (i == baseText.size || j == resultText.size) lengths[i][j] = 0
-            else if (stringComparator(baseText[i], resultText[j])) lengths[i][j] = 1 + lengths[i + 1][j + 1] //В данном случае алгоритм пытается находить строки, которые были образованы друг от друга
+            else if (stringComparator(baseText[i], resultText[j])) lengths[i][j] = 1 + lengths[i + 1][j + 1] //В данном случае алгоритм пытается находить строки, которые были образованы друг от друга, а не только полностью совпадающие
             else lengths[i][j] = max(lengths[i + 1][j], lengths[i][j + 1])
         }
     return longestCommonPartRecovery(baseText, resultText, lengths)
 
 }
-
+//Алгоритм восстановления индексов на которых находятся соответственные строки, принадлежащие общей подпоследовательности
 fun longestCommonPartRecovery(
     baseText: List<String>,
     resultText: List<String>,
@@ -67,51 +67,38 @@ fun longestCommonPartRecovery(
         else j++
     return res
 }
-
+// Алгоритм, показывающий последовательность действий, которую необходимо произвести, чтобы превратить один файл в другой
 fun printer(baseStrings: List<String>, resultStrings: List<String>,res: MutableList<RelevantElements>) {
-    var stringNumberWriter = 0
-    var curString = 0
     var curIndexBase = 0
     var curIndexResult = 0
+    var stringNumberWriter = 1
     res.add(RelevantElements(baseStrings.size,resultStrings.size))
     repeat(res.size)
     {
         for (i in curIndexBase until res[it].firstIndex) {
-            stringNumberWriter++;
-            println("${curString + stringNumberWriter}.$RED -${baseStrings[i]}$RESET")
-            if (i == res[it].firstIndex - 1 && curIndexResult <= resultStrings.size - 1) //если строки только удаляются и не добавляются, SEPARATOR не вызывается
-                println(SEPARATOR)
-        }
-        stringNumberWriter=0
-        for (i in curIndexResult until res[it].secondIndex) {
+            println("${stringNumberWriter}.$RED -${baseStrings[i]}$RESET")
             stringNumberWriter++
-            println("${curString + stringNumberWriter}.$GREEN +${resultStrings[i]}$RESET")
-            if (i == res[it].secondIndex - 1)
+            if (i == res[it].firstIndex - 1 && curIndexResult <= res[it].secondIndex - 1) //если строки только удаляются и не добавляются, SEPARATOR не вызывается
+                println(SEPARATOR)
+            else if (i==res[it].firstIndex-1)
                 println()
         }
-        if (res[it].firstIndex==baseStrings.size && res[it].secondIndex==resultStrings.size) {}
-        else {
-        println("${max(res[it].firstIndex, res[it].secondIndex) + 1}.$BLUE *${baseStrings[res[it].firstIndex]}$RESET")
-        println()
+        stringNumberWriter-=res[it].firstIndex-curIndexBase
+        for (i in curIndexResult until res[it].secondIndex) {
+            println("${stringNumberWriter}.$GREEN +${resultStrings[i]}$RESET")
+            stringNumberWriter++
+            if (i==res[it].secondIndex-1)
+                println()
+        }
+        if (!(res[it].firstIndex==baseStrings.size && res[it].secondIndex==resultStrings.size)) {
+        println("${stringNumberWriter}.$BLUE *${baseStrings[res[it].firstIndex]}$RESET")
+            stringNumberWriter++
+            println()
         }
 
-        curString = max(res[it].firstIndex, res[it].secondIndex) + 1
         curIndexBase = res[it].firstIndex + 1
         curIndexResult = res[it].secondIndex + 1
     }
-   /* stringNumberWriter=0
-    for (i in curIndexBase until baseStrings.size) {
-        stringNumberWriter++
-        println("${curString + stringNumberWriter}.$RED -${baseStrings[i]}$RESET")
-        if (i == baseStrings.size - 1 && curIndexResult <= resultStrings.size - 1) {
-            println(SEPARATOR)
-        }
-    }
-    stringNumberWriter=0
-    for (i in curIndexResult until resultStrings.size) {
-        stringNumberWriter++
-        println("${curString + stringNumberWriter}.$GREEN +${resultStrings[i]}$RESET")
-    }*/
 
 }
 
@@ -136,10 +123,10 @@ fun main() {
     val baseStrings: List<String> = baseFile.readLines()
     val resultStrings: List<String> = resultFile.readLines()
     val res: MutableList<RelevantElements> = littoralCombatShip(baseStrings, resultStrings)
-  /*  repeat(res.size)
+    repeat(res.size)
     {
         println("${res[it].firstIndex + 1} ${res[it].secondIndex + 1}")
-    }*/
+    }
     printer(baseStrings, resultStrings, res/*littoralCombatShip(baseStrings, resultStrings) */)
 
     /* repeat(baseStrings.size)
@@ -178,3 +165,5 @@ fun main() {
     bufferedReader.readLine()
    println(bufferedReader.readLine())*/
 }
+
+//fun test
