@@ -102,7 +102,20 @@ fun printer(baseStrings: List<String>, resultStrings: List<String>,res: MutableL
 
 }
 
+fun conversationWithUser(){
+    println("Welcome to diff utility testing system")
+    println("Write 'ch' if you want change input or output files")
+    println("Write 'run' if you want to run testing system")
+    println("Write 'q' if you want to leave")
+    var s:String
+    while (true){
+
+    }
+}
+
 fun main() {
+
+
 
     //Lcs test zone
 /*
