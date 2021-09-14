@@ -1,15 +1,16 @@
 import java.io.File
 import java.lang.Integer.max
 
+//Константы для оформления текста
 const val RESET: String = "\u001B[0m"
 const val RED: String = "\u001B[31m"
 const val GREEN: String = "\u001B[32m"
 const val BLUE: String = "\u001B[34m"
 const val SEPARATOR: String = "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-
+//Исходный и итоговый файлы
 val baseFile = File("src\\main\\resources\\base.txt")
 val resultFile = File("src\\main\\resources\\result.txt")
-
+//Класс хранящий индексы одинаковых строк файлов в алгоритме восстановления наибольшей общей подпоследовательности
 data class RelevantElements(val firstIndex: Int, val secondIndex: Int)
 
 // Алгоритм lcs применённый для файла, чтобы найти наибольшую общую часть двух файлов (работает аналогично LCS)
@@ -39,7 +40,7 @@ fun longestCommonPartRecovery(
     var i = 0
     var j = 0
     while (i < baseText.size && j < resultText.size)
-    // Алгоритм находит точку в которой буквы совпали и сохраняет её координты
+    // Алгоритм находит точку в которой буквы совпали и сохраняет её координаты
         if (baseText[i] == resultText[j]) {
             res.add(RelevantElements(i, j))
             i++
@@ -50,7 +51,7 @@ fun longestCommonPartRecovery(
 }
 
 // Алгоритм, работающий для вывода различий файлов или тестирования корректности работы утилиты
-// Алгоритм считает расстояния между соседними одинаковыми строками, которые получает из lcs для файлов и выводит строки, которые надо убрать, оставить без изменений или добавить
+// Алгоритм считает расстояния между соседними одинаковыми строками, которые получает из lcs для файлов, и выводит строки, которые надо убрать, оставить без изменений или добавить
 fun printer(
     outputOrTestFlag: Boolean = true,
     testStrSequence: MutableList<String> = mutableListOf("")
@@ -173,15 +174,15 @@ fun changer(): Int {
                     println("${GREEN}Write number of strings in your file:${RESET}")
                     var strNumber = readLine()
                     while (strNumber?.toIntOrNull() == null) {
-                        println("${RED}Write a number, without any symbols, excpet for numbers from 0 to 9${RESET}");
-                        strNumber = readLine();
+                        println("${RED}Write a number, without any symbols, except for numbers from 0 to 9${RESET}")
+                        strNumber = readLine()
                     }
 
                     println("${GREEN}Write length of strings in your file:${RESET}")
                     var strLength = readLine()
                     while (strLength?.toIntOrNull() == null) {
-                        println("${RED}Write a number, without any symbols, excpet for numbers from 0 to 9${RESET}");
-                        strLength = readLine();
+                        println("${RED}Write a number, without any symbols, except for numbers from 0 to 9${RESET}")
+                        strLength = readLine()
                     }
 
                     val newFile = mutableListOf(getRandomString(strLength.toInt())) // getRandomString описан далее
@@ -249,7 +250,7 @@ fun main() {
 
 
     println("Welcome to diff utility testing system")
-    conversationWithUser();
+    conversationWithUser()
 
     //Lcs test zone
 /*
