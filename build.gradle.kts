@@ -2,7 +2,6 @@ plugins {
     kotlin("jvm") version "1.5.10"
     application
 }
-
 group = "ru.spbu.math-cs"
 version = "1.0-SNAPSHOT"
 
@@ -21,4 +20,8 @@ tasks.getByName<Test>("test") {
 
 application {
     mainClass.set("MainKt")
+}
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
 }
