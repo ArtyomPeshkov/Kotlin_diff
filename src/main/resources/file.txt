@@ -5,6 +5,6 @@ caa
 bbc
 bcc
 cbc
-bcc
-bbc
-baa
+aaa
+abc
+def

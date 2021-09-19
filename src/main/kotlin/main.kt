@@ -8,13 +8,31 @@ const val GREEN: String = "\u001B[32m"
 const val BLUE: String = "\u001B[34m"
 const val SEPARATOR: String = "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
+val baseFile = File("src/main/resources/base.txt")
+
 
 //Класс хранящий индексы одинаковых строк файлов в алгоритме восстановления наибольшей общей подпоследовательности
 data class RelevantElements(val firstIndex: Int, val secondIndex: Int)
 
+fun rewriteFile(newFile: Collection<String>,destinationFile: File)
+{
+    destinationFile.writeText("")
+    newFile.forEach {
+        destinationFile.appendText(it + "\n")
+    }
+}
+
+// Алгоритм генерирующий рандомную строку
+fun getRandomString(difChars: Int, length: Int): String {
+    if (length == 0)
+        return ""
+    val allowedChars = ('a' until 'a' + difChars)
+    return (1..length).map { allowedChars.random() }.joinToString("")
+}
+
 // Алгоритм lcs применённый для файла, чтобы найти наибольшую общую часть двух файлов (работает аналогично LCS)
 
-fun longestCommonGroupOfStrings(baseFile: File, resultFile: File): MutableList<RelevantElements> {
+fun longestCommonGroupOfStrings(resultFile: File): MutableList<RelevantElements> {
     val baseText = baseFile.readLines()
     val resultText = resultFile.readLines()
     val lengths =
@@ -51,14 +69,14 @@ fun longestCommonPartRecovery(
 
 // Алгоритм, работающий для вывода различий файлов или тестирования корректности работы утилиты
 // Алгоритм считает расстояния между соседними одинаковыми строками, которые получает из lcs для файлов, и выводит строки, которые надо убрать, оставить без изменений или добавить
-fun printer(baseFile: File, resultFile: File) {
+fun printer(resultFile: File) {
     val baseStrings = baseFile.readLines()
     val resultStrings = resultFile.readLines()
+    // Массив позиций строк принадлежащих наибольшей общей подпоследовательности
     val res: MutableList<RelevantElements> =
         longestCommonGroupOfStrings(
-            baseFile,
             resultFile
-        ) // Массив позиций строк принадлежащих наибольшей общей подпоследовательности
+        )
 
     var curIndexBase = 0 //Индексация в исходном файле
     var curIndexResult = 0 //Индексация в итоговом файле
@@ -115,11 +133,7 @@ fun megaTester() {
         {
             newFileB.add(getRandomString(difChars, (0..10).random()))
         }
-        baseFile.writeText("")
-        repeat(strNumber)
-        {
-            baseFile.appendText(newFileB[it] + "\n")
-        }
+        rewriteFile(newFileB,baseFile)
 
         strNumber = (1..1000).random()
         val newFileR = mutableListOf<String>()//генерация нового итогового файла
@@ -127,14 +141,10 @@ fun megaTester() {
         {
             newFileR.add(getRandomString(difChars, (0..10).random()))
         }
-        resultFile.writeText("")
-        repeat(strNumber)
-        {
-            resultFile.appendText(newFileR[it] + "\n")
-        }
+        rewriteFile(newFileR,resultFile)
 
         //Вывод теста, который упал (если таковой есть)
-        if (!test(baseFile, resultFile)) {
+        if (!test(resultFile)) {
             println(RED + "Test failed" + RESET)
             println()
             newFileB.forEach {
@@ -145,7 +155,7 @@ fun megaTester() {
                 println(it)
             }
             println()
-            printer(baseFile, resultFile)
+            printer(resultFile)
             return
         }
         newFileB.clear()
@@ -156,18 +166,18 @@ fun megaTester() {
 
 // Алгоритм тестирующий корректность работы алгоритма
 // Симулирует предлагаемые программой изменения на массивах, совпадающих с файлами по содержанию и проверяет стали ли они равны
-fun test(baseFile: File, resultFile: File): Boolean {
+fun test(resultFile: File): Boolean {
     val baseStrings = baseFile.readLines().toMutableList()
     val resultStrings = resultFile.readLines().toMutableList()
     val testStrSequence: MutableList<String> = mutableListOf("")
     var ind = 0
-    stringForTestingSystemGenerator(baseFile, resultFile, testStrSequence)
+    stringForTestingSystemGenerator(resultFile, testStrSequence)
     testStrSequence.forEach()
     {
         when {
-            (it[0] == '-') -> baseStrings.removeAt(ind)
-            (it[0] == '*') -> ind++
-            (it[0] == '+') -> {
+            (it.first() == '-') -> baseStrings.removeAt(ind)
+            (it.first() == '*') -> ind++
+            (it.first() == '+') -> {
                 baseStrings.add(ind, it.substring(1 until it.length));ind++
             }
         }
@@ -177,13 +187,12 @@ fun test(baseFile: File, resultFile: File): Boolean {
 
 // Генерирует команды для тестирующей системы (работает аналогично printer, но ничего не выводит)
 fun stringForTestingSystemGenerator(
-    baseFile: File,
     resultFile: File,
     testStrSequence: MutableList<String>
 ) {
     val baseStrings = baseFile.readLines()
     val resultStrings = resultFile.readLines()
-    val res: MutableList<RelevantElements> = longestCommonGroupOfStrings(baseFile, resultFile)
+    val res: MutableList<RelevantElements> = longestCommonGroupOfStrings(resultFile)
 
     var curIndexBase = 0
     var curIndexResult = 0
@@ -210,10 +219,8 @@ fun stringForTestingSystemGenerator(
 }
 
 //Функция реализующая взаимодействие с пользователем
-fun conversationWithUser() {
+fun conversationWithUser(resultFile: File) {
     while (true) {
-        val baseFile = File("src/main/resources/base.txt")
-        val resultFile = File("src/main/resources/result.txt")
         println(GREEN + "Command list:")
         println(BLUE + "Write '${RED}ch$BLUE' if you want to change input or output files")
         println("Write '${RED}run$BLUE' if you want to run utility")
@@ -224,13 +231,13 @@ fun conversationWithUser() {
             s = readLine().toString()
             when (s) {
                 "ch", "Ch", "CH" -> {
-                    changer(baseFile, resultFile);break // changer будет описан далее
+                    changer(resultFile);break
                 }
                 "RUN", "Run", "run" -> {
-                    printer(baseFile, resultFile);break // printer описан выше
+                    printer(resultFile);break
                 }
                 "RUN T", "Run t", "run t" -> {
-                    megaTester(); break // megaTester описан выше
+                    megaTester(); break
                 }
                 "q", "Q" -> return
                 else -> println("${RED}Unknown command")
@@ -239,47 +246,24 @@ fun conversationWithUser() {
     }
 }
 
-//Алгоритм меняющий содержимое файлов в зависимости от требований пользователя
-fun changer(baseFile: File, resultFile: File): Int {
-    while (true) {
-        println(BLUE + "Choose file to change (write '${RED}original$BLUE' or '${RED}result$BLUE') or print '${RED}q$BLUE' to quit")
-        var s: String
-        var file: File
-        while (true) {
-            s = readLine().toString()
-            when (s) {
-                "original", "Original", "ORIGINAL" -> {
-                    file = baseFile;break
-                }
-                "result", "Result", "RESULT" -> {
-                    file = resultFile;break
-                }
-                "q", "Q" -> return 0
-                else -> println(RED + "Please, write 'original' or 'result'")
-            }
-        }
-
-        println(BLUE + "If you want to fill your file with random values, write '${RED}rnd$BLUE', if you want to fill it by yourself, write '${RED}my str$BLUE'")
-        println("If you want to print your file, write '${RED}print$BLUE', if you want to quite, write '${RED}q$BLUE'" + RESET)
-        randomAndUserInput(file) // описан далее
-    }
-}
-
-fun randomAndUserInput(
+//Алгоритм меняющий содержимое файла в зависимости от требований пользователя
+fun changer(
     file: File
 ) {
+    println(BLUE + "If you want to fill your file with random values, write '${RED}rnd$BLUE', if you want to fill it by yourself, write '${RED}my str$BLUE'")
+    println("If you want to print your file, write '${RED}print$BLUE', if you want to quite, write '${RED}q$BLUE'" + RESET)
     while (true) {
         when (readLine().toString()) {
             "rnd", "Rnd", "RND" -> {
-                randomChanger(file) // Меняет файл рандомно
+                randomChanger(file)
                 break
             }
             "my str", "My str", "MY STR" -> {
-                userChanger(file) //Меняет файл по запросам пользователя
+                userChanger(file)
                 break
             }
             "print", "Print", "PRINT" -> {
-                file.readLines().forEach() {
+                file.readLines().forEach {
                     println(it)
                 }
                 println()
@@ -292,52 +276,39 @@ fun randomAndUserInput(
     }
 }
 
+fun checkCorrectInput(minVal: Int, maxVal:Int) : Int
+{
+    var someNumber = readLine()
+    while (someNumber?.toIntOrNull() == null || someNumber.toInt() < minVal || someNumber.toInt() > maxVal) {
+        println(RED + "Write correct number")
+        someNumber = readLine()
+    }
+    return someNumber.toInt()
+}
+
 fun randomChanger(file: File) {
+    rewriteFile(file.readLines(),baseFile)
     println(GREEN + "Write number of strings in your file (from 0 to 10000):")
-    var strNumber = readLine()
-    while (strNumber?.toIntOrNull() == null || strNumber.toInt() < 0 || strNumber.toInt() > 10000) {
-        println(RED + "Write correct number")
-        strNumber = readLine()
-    }
-
+    val strNumber = checkCorrectInput(0,10000)
     println(GREEN + "Write length of strings in your file (from 0 to 1000):")
-    var strLength = readLine()
-    while (strLength?.toIntOrNull() == null || strLength.toInt() < 0 || strLength.toInt() > 1000) {
-        println(RED + "Write correct number")
-        strLength = readLine()
-    }
-
+    val strLength = checkCorrectInput(0,1000)
     println(GREEN + "Write how many different symbols you want to have in your string (from 1 to 26)")
-    var difChars = readLine()
-    while (difChars?.toIntOrNull() == null || difChars.toInt() > 26 || difChars.toInt() < 1) {
-        println(RED + "Write a number between 1 and 26")
-        difChars = readLine()
-    }
+    val difChars = checkCorrectInput(1,26)
 
-    val newFile = mutableListOf(getRandomString(difChars.toInt(), strLength.toInt())) // getRandomString описан далее
-    repeat(strNumber.toInt() - 1)
+    val newFile = mutableListOf(getRandomString(difChars, strLength))
+    repeat(strNumber - 1)
     {
-        newFile.add(getRandomString(difChars.toInt(), strLength.toInt()))
+        newFile.add(getRandomString(difChars, strLength))
     }
 
-    file.writeText("")
-    newFile.forEach {
-        file.appendText(it + "\n")
-    }
+    rewriteFile(newFile,file)
     println(RED + "Random file generated")
     newFile.clear()
 }
 
-// Алгоритм генерирующий рандомную строку
-fun getRandomString(difChars: Int, length: Int): String {
-    if (length == 0)
-        return ""
-    val allowedChars = ('a' until 'a' + difChars)
-    return (1..length).map { allowedChars.random() }.joinToString("")
-}
-
 //Обрабатывает запросы пользователя по изменению файла
 fun userChanger(file: File) {
+    val saveFile = file.readLines().toMutableList()
     val changingFile = file.readLines().toMutableList()
     changingFile.forEachIndexed { index, str ->
         println("${(index + 1).toString().padEnd(changingFile.size.toString().length)} $str")
@@ -380,7 +351,7 @@ fun userChanger(file: File) {
                     println(GREEN + "Write new string:")
                     val newStr = readLine()
                     if (newStr != null)
-                        changingFile.add(strNumber.toInt() - 1, newStr )
+                        changingFile.add(strNumber.toInt() - 1, newStr)
                     else
                         changingFile.add(strNumber.toInt() - 1, "")
                 }
@@ -410,10 +381,9 @@ fun userChanger(file: File) {
                 }
             }
             "q", "Q" -> {
-                file.writeText("")
-                changingFile.forEach {
-                    file.appendText(it + "\n")
-                }
+                rewriteFile(changingFile,file)
+                if (saveFile != changingFile)
+                    rewriteFile(saveFile,baseFile)
                 return
             }
             else -> println(RED + "Unknown command")
@@ -422,6 +392,17 @@ fun userChanger(file: File) {
 }
 
 fun main() {
+    baseFile.writeText("")
     println(GREEN + "Welcome to diff utility testing system")
-    conversationWithUser()
+    println(BLUE + "Write path to your file (now you are in project folder)")
+    var resultFile: String? = readLine()
+    while (true) {
+        when{
+            (resultFile == null || !File(resultFile).exists()) -> println(RED + "Please write existing file")
+            (File(resultFile).absoluteFile==File("src/main/resources/base.txt").absoluteFile || File(resultFile).absoluteFile==File("src/main/resources/testResult.txt").absoluteFile || File(resultFile).absoluteFile==File("src/main/resources/testBase.txt").absoluteFile) -> println(RED + "You do not have access to that file")
+            else -> break
+        }
+        resultFile = readLine()
+    }
+    conversationWithUser(File(resultFile!!))
 }
