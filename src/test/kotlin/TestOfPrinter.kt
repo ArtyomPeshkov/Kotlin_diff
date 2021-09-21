@@ -1,6 +1,4 @@
 import java.io.File
-import kotlin.test.*
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import kotlin.test.BeforeTest
@@ -40,6 +38,7 @@ internal class TestOfPrinter {
             $GREEN* means that string doesn't have to be changed
             - means that string should be deleted
             + means that string should be added$RESET
+            
             1.$GREEN +aaa$RESET
             
             2.$BLUE *abc$RESET
@@ -73,6 +72,7 @@ internal class TestOfPrinter {
             $GREEN* means that string doesn't have to be changed
             - means that string should be deleted
             + means that string should be added$RESET
+            
             1.$BLUE *$RESET
             
             2.$BLUE *$RESET
@@ -97,6 +97,7 @@ internal class TestOfPrinter {
             $GREEN* means that string doesn't have to be changed
             - means that string should be deleted
             + means that string should be added$RESET
+            
             1.$GREEN +aaa$RESET
             2.$GREEN +$RESET
 
