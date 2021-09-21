@@ -1,10 +1,44 @@
 import java.io.File
 
+//Функция, запрашивающая у пользователя путь до нового файла
+fun newFileReader(): String {
+    println(BLUE + "Write$RED path to your file$BLUE (now you are in project folder)")
+    var resultFile: String? = readLine()
+    while (true) {
+        when {
+            (resultFile == null || !File(resultFile).exists()) -> println(RED + "Please write existing file")
+            (File(resultFile).absoluteFile == File("src/main/resources/base.txt").absoluteFile || File(resultFile).absoluteFile == File(
+                "src/main/resources/testResult.txt"
+            ).absoluteFile || File(resultFile).absoluteFile == File("src/main/resources/testBase.txt").absoluteFile) -> println(
+                RED + "You do not have access to that file"
+            )
+            else -> break
+        }
+        resultFile = readLine()
+    }
+    return resultFile!!
+}
+
+fun simpleAnswerForQuestion(): Boolean {
+    var ans = readLine()
+    while (true) {
+        when (ans) {
+            "Y", "y", "Yes", "yes", "YES" -> return true
+            "N", "n", "No", "no", "NO" -> return false
+            else -> println(RED + "Please write 'y' or 'n'")
+        }
+        ans = readLine()
+    }
+}
+
 //Функция реализующая взаимодействие с пользователем
-fun conversationWithUser(baseFile:File,resultFile: File) {
+fun conversationWithUser(baseFile: File) {
+    baseFile.writeText("")
+    var resultFile: String = newFileReader()
     while (true) {
         println(GREEN + "Command list:")
-        println(BLUE + "Write '${RED}ch$BLUE' if you want to change input or output files")
+        println(BLUE + "Write '${RED}ch$BLUE' if you want to change your file")
+        println("Write '${RED}other$BLUE' if you want to work with other file")
         println("Write '${RED}run$BLUE' if you want to run utility")
         println("Write '${RED}run t$BLUE' if you want to run testing system")
         println("Write '${RED}q$BLUE' if you want to quit")
@@ -13,10 +47,18 @@ fun conversationWithUser(baseFile:File,resultFile: File) {
             s = readLine().toString()
             when (s) {
                 "ch", "Ch", "CH" -> {
-                    changer(baseFile,resultFile);break
+                    changer(baseFile, File(resultFile));break
+                }
+                "Other", "other", "OTHER" -> {
+                    baseFile.writeText("")
+                    resultFile = newFileReader(); break
                 }
                 "RUN", "Run", "run" -> {
-                    printer(baseFile,resultFile);break
+                    println(BLUE + "Do you want to print strings, that haven't been changed?(Y/n)")
+                    printer(baseFile, File(resultFile),simpleAnswerForQuestion())
+                    println(BLUE + "Do you want to save this changes?(Y/n)")
+                    if (simpleAnswerForQuestion())
+                        rewriteFile(File(resultFile).readLines(), baseFile);break
                 }
                 "RUN T", "Run t", "run t" -> {
                     megaTester(); break
@@ -29,17 +71,16 @@ fun conversationWithUser(baseFile:File,resultFile: File) {
 }
 
 //Алгоритм меняющий содержимое файла в зависимости от требований пользователя
-fun changer(baseFile: File,resultFile: File
-) {
+fun changer(baseFile: File, resultFile: File) {
     println(BLUE + "If you want to fill your file with random values, write '${RED}rnd$BLUE', if you want to fill it by yourself, write '${RED}my str$BLUE'")
     println("If you want to print your file, write '${RED}print$BLUE', if you want to quite, write '${RED}q$BLUE'" + RESET)
     while (true) when (readLine().toString()) {
         "rnd", "Rnd", "RND" -> {
-            randomChanger(baseFile,resultFile)
+            randomChanger(baseFile, resultFile)
             break
         }
         "my str", "My str", "MY STR" -> {
-            userChanger(baseFile,resultFile)
+            userChanger(baseFile, resultFile)
             break
         }
         "print", "Print", "PRINT" -> {
@@ -54,38 +95,37 @@ fun changer(baseFile: File,resultFile: File
     }
 }
 
-fun checkCorrectInput(minVal: Int, maxVal:Int) : Int
-{
+fun checkCorrectInput(minVal: Int, maxVal: Int): Int {
     var someNumber = readLine()
-    while (someNumber?.toIntOrNull() == null || someNumber.toInt() < minVal || someNumber.toInt() > maxVal) {
+    while (someNumber == null || someNumber.toIntOrNull() == null || someNumber.toInt() < minVal || someNumber.toInt() > maxVal) {
         println(RED + "Write correct number")
         someNumber = readLine()
     }
     return someNumber.toInt()
 }
 
-fun randomChanger(baseFile: File,resultFile: File) {
-    rewriteFile(resultFile.readLines(),baseFile)
+fun randomChanger(baseFile: File, resultFile: File) {
+    rewriteFile(resultFile.readLines(), baseFile)
     println(GREEN + "Write number of strings in your file (from 0 to 10000):")
-    val strNumber = checkCorrectInput(0,10000)
+    val strNumber = checkCorrectInput(0, 10000)
     println(GREEN + "Write length of strings in your file (from 0 to 1000):")
-    val strLength = checkCorrectInput(0,1000)
+    val strLength = checkCorrectInput(0, 1000)
     println(GREEN + "Write how many different symbols you want to have in your string (from 1 to 26)")
-    val difChars = checkCorrectInput(1,26)
+    val difChars = checkCorrectInput(1, 26)
 
-    val newFile = mutableListOf(getRandomString(difChars, strLength))
-    repeat(strNumber - 1)
+    val newFile :MutableList<String> = mutableListOf()
+    repeat(strNumber)
     {
         newFile.add(getRandomString(difChars, strLength))
     }
 
-    rewriteFile(newFile,resultFile)
+    rewriteFile(newFile, resultFile)
     println(RED + "Random file generated")
     newFile.clear()
 }
 
 //Обрабатывает запросы пользователя по изменению файла
-fun userChanger(baseFile: File,resultFile: File) {
+fun userChanger(baseFile: File, resultFile: File) {
     val saveFile = resultFile.readLines().toMutableList()
     val changingFile = resultFile.readLines().toMutableList()
     changingFile.forEachIndexed { index, str ->
@@ -159,9 +199,9 @@ fun userChanger(baseFile: File,resultFile: File) {
                 }
             }
             "q", "Q" -> {
-                rewriteFile(changingFile,resultFile)
+                rewriteFile(changingFile, resultFile)
                 if (saveFile != changingFile)
-                    rewriteFile(saveFile,baseFile)
+                    rewriteFile(saveFile, baseFile)
                 return
             }
             else -> println(RED + "Unknown command")

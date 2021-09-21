@@ -21,25 +21,12 @@ fun rewriteFile(newFile: Collection<String>,destinationFile: File)
 
 // Алгоритм генерирующий рандомную строку
 fun getRandomString(difChars: Int, length: Int): String {
-    if (length == 0)
-        return ""
     val allowedChars = ('a' until 'a' + difChars)
     return (1..length).map { allowedChars.random() }.joinToString("")
 }
 
 fun main() {
     val baseFile = File("src/main/resources/base.txt")
-    baseFile.writeText("")
     println(GREEN + "Welcome to diff utility testing system")
-    println(BLUE + "Write path to your file (now you are in project folder)")
-    var resultFile: String? = readLine()
-    while (true) {
-        when{
-            (resultFile == null || !File(resultFile).exists()) -> println(RED + "Please write existing file")
-            (File(resultFile).absoluteFile==File("src/main/resources/base.txt").absoluteFile || File(resultFile).absoluteFile==File("src/main/resources/testResult.txt").absoluteFile || File(resultFile).absoluteFile==File("src/main/resources/testBase.txt").absoluteFile) -> println(RED + "You do not have access to that file")
-            else -> break
-        }
-        resultFile = readLine()
-    }
-    conversationWithUser(baseFile, File(resultFile!!))
+    conversationWithUser(baseFile)
 }

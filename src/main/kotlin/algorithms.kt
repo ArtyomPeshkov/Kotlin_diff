@@ -40,7 +40,7 @@ fun longestCommonPartRecovery(
 
 // Алгоритм, работающий для вывода различий файлов или тестирования корректности работы утилиты
 // Алгоритм считает расстояния между соседними одинаковыми строками, которые получает из lcs для файлов, и выводит строки, которые надо убрать, оставить без изменений или добавить
-fun printer(baseFile: File,resultFile: File) {
+fun printer(baseFile: File,resultFile: File, outputNotOnlyChanged:Boolean = true) {
     val baseStrings = baseFile.readLines()
     val resultStrings = resultFile.readLines()
     // Массив позиций строк принадлежащих наибольшей общей подпоследовательности
@@ -61,6 +61,7 @@ fun printer(baseFile: File,resultFile: File) {
     println("$GREEN* means that string doesn't have to be changed")
     println("- means that string should be deleted")
     println("+ means that string should be added$RESET")
+    println()
     res.forEach()
     { elem ->
         //Проход по исходному файлу от текущего индекса до ближайшей совпадающей строки
@@ -80,10 +81,10 @@ fun printer(baseFile: File,resultFile: File) {
                 println()
         }
         //Вывод строки, которую не надо менять (в случае, если это не наша искусственная строка)
-        if (elem.firstIndex != baseStrings.size) {
+        if (elem.firstIndex != baseStrings.size && outputNotOnlyChanged) {
             println("${stringNumberWriter++}.$BLUE *${baseStrings[elem.firstIndex]}$RESET")
             println()
-        }
+        } else stringNumberWriter++
 
         curIndexBase = elem.firstIndex + 1
         curIndexResult = elem.secondIndex + 1

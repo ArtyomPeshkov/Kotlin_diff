@@ -1,12 +1,12 @@
 import java.io.File
 
 fun megaTester() {
-    repeat(100)
+    repeat(1000)
     {
-        var strNumber = (1..1000).random() // количество строк
+        var strNumber = (1..100).random() // количество строк
         val difChars = (1..5).random() // количество различных символов
-        val baseFile = File("src/main/resources/testBase.txt")
-        val resultFile = File("src/main/resources/testResult.txt")
+        val baseFile = File("src/test/resources/testBase.txt")
+        val resultFile = File("src/test/resources/testResult.txt")
 
         val newFileB = mutableListOf<String>()//генерация нового исходного файла
         repeat(strNumber)
@@ -15,7 +15,7 @@ fun megaTester() {
         }
         rewriteFile(newFileB,baseFile)
 
-        strNumber = (1..1000).random()
+        strNumber = (1..100).random()
         val newFileR = mutableListOf<String>()//генерация нового итогового файла
         repeat(strNumber)
         {
@@ -27,6 +27,7 @@ fun megaTester() {
         if (!test(baseFile,resultFile))
         {
             println(RED + "Test failed" + RESET)
+            println(RED + "Please send this test to ${GREEN}artemyipeshkov@gmail.com" + RESET)
             println()
             newFileB.forEach {
                 println(it)
