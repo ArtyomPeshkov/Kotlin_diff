@@ -1,7 +1,15 @@
 import java.io.File
 
 // Алгоритм lcs применённый для файла, чтобы найти наибольшую общую часть двух файлов (работает аналогично LCS)
-
+/**
+ @brief Функция поиска длины наибольшей общей подпоследовательности двух файлов
+ @detailed Функция генерирует двумерный массив размера m*n, где m и n - это размеры
+ файла до изменения и после, после чего для каждой позиции таблицы указывает наибольшую общую часть файлов, которую
+ можно найти двигаясь с этих позиций до конца файла.
+ @param Функция принимает файл до изменения и после.
+ @return Функция возвращает массив пар индексов. Каждая пара - индексы строки принадлежащей наибольшей общей подпоследовательности
+ в файле до изменения и после.
+ */
 fun longestCommonGroupOfStrings(baseFile: File,resultFile: File): MutableList<RelevantElements> {
     val baseText = baseFile.readLines()
     val resultText = resultFile.readLines()
@@ -18,6 +26,16 @@ fun longestCommonGroupOfStrings(baseFile: File,resultFile: File): MutableList<Re
 
 }
 
+/**
+@brief Функция восстановления наибольшей общей подпоследовательности двух файлов. Вызывается только из функции 'longestCommonGroupOfStrings'.
+@detailed Функция двигается по двумерному массиву сгенерированному в 'longestCommonGroupOfStrings'. Движение происходит следующим образом:
+функция двигается к индексам, в которых строки совпали. При этом, если в одной из таких точек длина наибольшей общей части файлов от этого момента
+до конца файлов равна n, пока алгоритм не найдёт хотя бы 1 точку в которой эта длина равна n-1, он не перейдёт к точке длина от которой равна n-2
+@param Функция принимает файл до изменения и после и двумерный массив размера m*n, где m и n - это размеры
+файла до изменения и после (массив получен из 'longestCommonGroupOfStrings').
+@return Функция возвращает массив пар индексов. Каждая пара - индексы строки принадлежащей наибольшей общей подпоследовательности
+в файле до изменения и после.
+ */
 //Алгоритм восстановления индексов на которых находятся соответственные строки, принадлежащие общей подпоследовательности
 fun longestCommonPartRecovery(
     baseText: List<String>,
@@ -38,6 +56,14 @@ fun longestCommonPartRecovery(
     return res
 }
 
+/**
+@brief Функция выводящая результат работы утилиты.
+@detailed
+@param Функция принимает файл до изменения и после и двумерный массив размера m*n, где m и n - это размеры
+файла до изменения и после (массив получен из 'longestCommonGroupOfStrings').
+@return Функция возвращает массив пар индексов. Каждая пара - индексы строки принадлежащей наибольшей общей подпоследовательности
+в файле до изменения и после.
+ */
 // Алгоритм, работающий для вывода различий файлов или тестирования корректности работы утилиты
 // Алгоритм считает расстояния между соседними одинаковыми строками, которые получает из lcs для файлов, и выводит строки, которые надо убрать, оставить без изменений или добавить
 fun printer(baseFile: File,resultFile: File, outputNotOnlyChanged:Boolean = true) {
@@ -62,24 +88,35 @@ fun printer(baseFile: File,resultFile: File, outputNotOnlyChanged:Boolean = true
     println("- means that string should be deleted")
     println("+ means that string should be added$RESET")
     println()
+    fun printAddedOrDeleted(valueFrom:Int, valueTo:Int, fileStrings: List<String>, plusMinus:Char, color:String, flagForSeparator:Boolean=false){
+        for (i in valueFrom until valueTo) {
+            println("${stringNumberWriter++}.$color $plusMinus${fileStrings[i]}$RESET")
+            if (flagForSeparator && i == valueTo - 1) //если строки только удаляются и не добавляются, SEPARATOR не вызывается
+                println(SEPARATOR)
+            else if (i == valueTo - 1)
+                println()
+        }
+    }
     res.forEach()
     { elem ->
         //Проход по исходному файлу от текущего индекса до ближайшей совпадающей строки
-        for (i in curIndexBase until elem.firstIndex) {
+        printAddedOrDeleted(curIndexBase,elem.firstIndex,baseStrings,'-',RED,curIndexResult <= elem.secondIndex - 1)
+     /*   for (i in curIndexBase until elem.firstIndex) {
             println("${stringNumberWriter++}.$RED -${baseStrings[i]}$RESET")
             if (curIndexResult <= elem.secondIndex - 1 && i == elem.firstIndex - 1) //если строки только удаляются и не добавляются, SEPARATOR не вызывается
                 println(SEPARATOR)
             else if (i == elem.firstIndex - 1)
                 println()
-        }
+        }*/
         //После всех удалений возвращает индекс на положение, которое было до удаления строк
         stringNumberWriter -= elem.firstIndex - curIndexBase
         //Проход по итоговому файлу от текущего индекса до ближайшей совпадающей строки
-        for (i in curIndexResult until elem.secondIndex) {
+        printAddedOrDeleted(curIndexResult,elem.secondIndex,resultStrings,'+',GREEN)
+       /* for (i in curIndexResult until elem.secondIndex) {
             println("${stringNumberWriter++}.$GREEN +${resultStrings[i]}$RESET")
             if (i == elem.secondIndex - 1)
                 println()
-        }
+        }*/
         //Вывод строки, которую не надо менять (в случае, если это не наша искусственная строка)
         if (elem.firstIndex != baseStrings.size && outputNotOnlyChanged) {
             println("${stringNumberWriter++}.$BLUE *${baseStrings[elem.firstIndex]}$RESET")

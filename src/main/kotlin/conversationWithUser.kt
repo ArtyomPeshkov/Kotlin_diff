@@ -8,8 +8,8 @@ fun newFileReader(): String {
         when {
             (resultFile == null || !File(resultFile).exists()) -> println(RED + "Please write existing file")
             (File(resultFile).absoluteFile == File("src/main/resources/base.txt").absoluteFile || File(resultFile).absoluteFile == File(
-                "src/main/resources/testResult.txt"
-            ).absoluteFile || File(resultFile).absoluteFile == File("src/main/resources/testBase.txt").absoluteFile) -> println(
+                "src/test/resources/testResult.txt"
+            ).absoluteFile || File(resultFile).absoluteFile == File("src/test/resources/testBase.txt").absoluteFile) -> println(
                 RED + "You do not have access to that file"
             )
             else -> break
