@@ -74,7 +74,7 @@ fun stringForTestingSystemGenerator(baseFile: File,
 ) {
     val baseStrings = baseFile.readLines()
     val resultStrings = resultFile.readLines()
-    val res: MutableList<RelevantElements> = longestCommonGroupOfStrings(baseFile,resultFile)
+    val res: MutableList<RelevantElements> = longestCommonSubsequenceOfStrings(baseFile,resultFile)
 
     var curIndexBase = 0
     var curIndexResult = 0
