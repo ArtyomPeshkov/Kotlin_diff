@@ -1,25 +1,33 @@
 import java.io.File
 
+
+/**
+@brief
+ Функция, запускающая 1000 рандомных тестов для нашей утилиты.
+@detailed
+ В теле функции генерируется рандомное количество строк от 1 до 100, рандомное количество различных символов в строке от 1 до 5
+ и
+ */
 fun megaTester() {
     repeat(1000)
     {
-        var strNumber = (1..100).random() // количество строк
-        val difChars = (1..5).random() // количество различных символов
+        var strNumber = (50..100).random() // количество строк
+        val difChars = (1..3).random() // количество различных символов
         val baseFile = File("src/test/resources/testBase.txt")
         val resultFile = File("src/test/resources/testResult.txt")
 
         val newFileB = mutableListOf<String>()//генерация нового исходного файла
         repeat(strNumber)
         {
-            newFileB.add(getRandomString(difChars, (0..10).random()))
+            newFileB.add(getRandomString(difChars,3 /*(0..10).random()*/))
         }
         rewriteFile(newFileB,baseFile)
 
-        strNumber = (1..100).random()
+        strNumber = (50..100).random()
         val newFileR = mutableListOf<String>()//генерация нового итогового файла
         repeat(strNumber)
         {
-            newFileR.add(getRandomString(difChars, (0..10).random()))
+            newFileR.add(getRandomString(difChars,3 /*(0..10).random()*/))
         }
         rewriteFile(newFileR,resultFile)
 

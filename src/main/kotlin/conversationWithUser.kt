@@ -33,8 +33,8 @@ fun simpleAnswerForQuestion(): Boolean {
 
 //Функция реализующая взаимодействие с пользователем
 fun conversationWithUser(baseFile: File) {
-    baseFile.writeText("")
     var resultFile: String = newFileReader()
+    rewriteFile(File(resultFile).readLines(),baseFile)
     while (true) {
         println(GREEN + "Command list:")
         println(BLUE + "Write '${RED}ch$BLUE' if you want to change your file")
@@ -51,15 +51,17 @@ fun conversationWithUser(baseFile: File) {
                 }
                 "Other", "other", "OTHER" -> {
                     baseFile.writeText("")
-                    resultFile = newFileReader(); break
+                    resultFile = newFileReader()
+                    rewriteFile(File(resultFile).readLines(),baseFile); break
                 }
                 "RUN", "Run", "run" -> {
                     println(BLUE + "Do you want to print strings, that haven't been changed?(Y/n)")
                     printer(baseFile, File(resultFile),simpleAnswerForQuestion())
-                    println(BLUE + "Do you want to save this changes?(Y/n)")
-                    if (simpleAnswerForQuestion())
-                        rewriteFile(File(resultFile).readLines(), baseFile);break
-                }
+                        println(BLUE + "Do you want to compare further changes with current version of file?(Y/n)")
+                        if (simpleAnswerForQuestion())
+                            rewriteFile(File(resultFile).readLines(),baseFile)
+                    break
+                    }
                 "RUN T", "Run t", "run t" -> {
                     megaTester(); break
                 }
@@ -105,7 +107,6 @@ fun checkCorrectInput(minVal: Int, maxVal: Int): Int {
 }
 
 fun randomChanger(baseFile: File, resultFile: File) {
-    rewriteFile(resultFile.readLines(), baseFile)
     println(GREEN + "Write number of strings in your file (from 0 to 10000):")
     val strNumber = checkCorrectInput(0, 10000)
     println(GREEN + "Write length of strings in your file (from 0 to 1000):")
@@ -200,8 +201,6 @@ fun userChanger(baseFile: File, resultFile: File) {
             }
             "q", "Q" -> {
                 rewriteFile(changingFile, resultFile)
-                if (saveFile != changingFile)
-                    rewriteFile(saveFile, baseFile)
                 return
             }
             else -> println(RED + "Unknown command")

@@ -11,6 +11,7 @@ const val SEPARATOR: String = "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 //Класс хранящий индексы одинаковых строк файлов в алгоритме восстановления наибольшей общей подпоследовательности
 data class RelevantElements(val firstIndex: Int, val secondIndex: Int)
 
+//Функция очищает файл и записывает в него переданный список строк
 fun rewriteFile(newFile: Collection<String>,destinationFile: File)
 {
     destinationFile.writeText("")
