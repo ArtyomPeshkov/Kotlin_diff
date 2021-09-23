@@ -35,7 +35,7 @@ fun simpleAnswerForQuestion(): Boolean {
     }
 }
 
-//Функция реализующая взаимодействие с пользователем
+//Функция реализующая общение с пользователем
 fun conversationWithUser(baseFile: File) {
     var resultFile: String = newFileReader()
     rewriteFile(File(resultFile).readLines(),baseFile)

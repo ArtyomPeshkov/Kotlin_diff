@@ -5,13 +5,14 @@ import java.io.File
 @brief
  Функция, запускающая 1000 рандомных тестов для нашей утилиты.
 @detailed
- В теле функции генерируется рандомное количество строк от 1 до 100, рандомное количество различных символов в строке от 1 до 5
- и
+ В теле функции генерируется рандомное количество строк от 1 до 100 для каждого файла, рандомное количество различных символов в строке от 1 до 3
+ и для каждой строки рандомная длина от 1 до 10 после чего для этих файлов применяется test, которая проверяет корректность работы diff для этих файлов
+ Если на каких-то файлах тест "падает", то информация о файлах выводится на экран
  */
 fun megaTester() {
     repeat(1000)
     {
-        var strNumber = (50..100).random() // количество строк
+        var strNumber = (1..100).random() // количество строк
         val difChars = (1..3).random() // количество различных символов
         val baseFile = File("src/test/resources/testBase.txt")
         val resultFile = File("src/test/resources/testResult.txt")
@@ -19,15 +20,15 @@ fun megaTester() {
         val newFileB = mutableListOf<String>()//генерация нового исходного файла
         repeat(strNumber)
         {
-            newFileB.add(getRandomString(difChars,3 /*(0..10).random()*/))
+            newFileB.add(getRandomString(difChars,(0..10).random()))
         }
         rewriteFile(newFileB,baseFile)
 
-        strNumber = (50..100).random()
+        strNumber = (1..100).random()
         val newFileR = mutableListOf<String>()//генерация нового итогового файла
         repeat(strNumber)
         {
-            newFileR.add(getRandomString(difChars,3 /*(0..10).random()*/))
+            newFileR.add(getRandomString(difChars,(0..10).random()))
         }
         rewriteFile(newFileR,resultFile)
 
@@ -54,14 +55,23 @@ fun megaTester() {
     println(GREEN + "All tests passed" + RESET)
 }
 
-// Алгоритм тестирующий корректность работы алгоритма
-// Симулирует предлагаемые программой изменения на массивах, совпадающих с файлами по содержанию и проверяет стали ли они равны
+
+/**
+@brief
+Алгоритм тестирующий корректность работы утилиты.
+@detailed
+Алгоритм симулирует предлагаемые программой изменения на массивах, совпадающих с файлами по содержанию и проверяет, стали ли они равны
+ после применения предлагаемых действий. Если они стали равны, то утилита работает корректно.
+@param
+Функция принимает файл до изменения и после.
+ @return
+ Прошёл тест или упал
+ */
 fun test(baseFile: File, resultFile: File): Boolean {
     val baseStrings = baseFile.readLines().toMutableList()
     val resultStrings = resultFile.readLines().toMutableList()
-    val testStrSequence: MutableList<String> = mutableListOf("")
     var ind = 0
-    stringForTestingSystemGenerator(baseFile, resultFile, testStrSequence)
+    val testStrSequence = stringForTestingSystemGenerator(baseFile, resultFile)
     testStrSequence.forEach()
     {
         when {
@@ -75,14 +85,25 @@ fun test(baseFile: File, resultFile: File): Boolean {
     return baseStrings == resultStrings
 }
 
+/**
+@brief
+Генератор команд для тестирующего алгоритма.
+@detailed
+Генерирует команды для тестирующей системы, делает он это аналогично тому, как printer выводит результат работы,
+но вместо вывода он сохраняет строки с соответствующими им командами
+@param
+Функция принимает файл до изменения и после.
+@return
+Прошёл тест или упал
+ */
 // Генерирует команды для тестирующей системы (работает аналогично printer, но ничего не выводит)
 fun stringForTestingSystemGenerator(baseFile: File,
-                                    resultFile: File,
-                                    testStrSequence: MutableList<String>
-) {
+                                    resultFile: File
+): MutableList<String> {
     val baseStrings = baseFile.readLines()
     val resultStrings = resultFile.readLines()
     val res: MutableList<RelevantElements> = longestCommonSubsequenceOfStrings(baseFile,resultFile)
+    val testStrSequence: MutableList<String> = mutableListOf()
 
     var curIndexBase = 0
     var curIndexResult = 0
@@ -106,4 +127,5 @@ fun stringForTestingSystemGenerator(baseFile: File,
         curIndexResult = res[it].secondIndex + 1
     }
     res.clear()
+    return testStrSequence
 }
