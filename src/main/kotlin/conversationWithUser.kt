@@ -1,5 +1,7 @@
 import java.io.File
 
+var flagUserVersionControl = false;
+
 //Функция, запрашивающая у пользователя путь до нового файла
 fun newFileReader(): String {
     println(BLUE + "Write$RED path to your file$BLUE (now you are in project folder)")
@@ -16,6 +18,8 @@ fun newFileReader(): String {
         }
         resultFile = readLine()
     }
+    println(BLUE + "Do you want to control version of file to compare with by yourself?(Y/n)")
+    flagUserVersionControl=simpleAnswerForQuestion()
     return resultFile!!
 }
 
@@ -39,6 +43,7 @@ fun conversationWithUser(baseFile: File) {
         println(GREEN + "Command list:")
         println(BLUE + "Write '${RED}ch$BLUE' if you want to change your file")
         println("Write '${RED}other$BLUE' if you want to work with other file")
+        if (flagUserVersionControl) println("Write '${RED}save$BLUE' if you want to compare next versions of file with current one")
         println("Write '${RED}run$BLUE' if you want to run utility")
         println("Write '${RED}run t$BLUE' if you want to run testing system")
         println("Write '${RED}q$BLUE' if you want to quit")
@@ -54,19 +59,27 @@ fun conversationWithUser(baseFile: File) {
                     resultFile = newFileReader()
                     rewriteFile(File(resultFile).readLines(),baseFile); break
                 }
+                "Save", "save","SAVE" ->{
+                    if (flagUserVersionControl) {
+                        rewriteFile(File(resultFile).readLines(), baseFile)
+                        println(GREEN + "Version saved")
+                        break
+                    }
+                    else
+                        println(RED + "Unknown command")
+                }
                 "RUN", "Run", "run" -> {
                     println(BLUE + "Do you want to print strings, that haven't been changed?(Y/n)")
                     printer(baseFile, File(resultFile),simpleAnswerForQuestion())
-                        println(BLUE + "Do you want to compare further changes with current version of file?(Y/n)")
-                        if (simpleAnswerForQuestion())
-                            rewriteFile(File(resultFile).readLines(),baseFile)
+                    if (!flagUserVersionControl)
+                        rewriteFile(File(resultFile).readLines(), baseFile)
                     break
                     }
                 "RUN T", "Run t", "run t" -> {
                     megaTester(); break
                 }
                 "q", "Q" -> return
-                else -> println("${RED}Unknown command")
+                else -> println(RED + "Unknown command")
             }
         }
     }
@@ -107,6 +120,14 @@ fun checkCorrectInput(minVal: Int, maxVal: Int): Int {
 }
 
 fun randomChanger(baseFile: File, resultFile: File) {
+    if (flagUserVersionControl)
+    {
+        println(BLUE + "Do you want to save current version of file as version to compare with?(Y/n)")
+        if (simpleAnswerForQuestion())
+            rewriteFile(resultFile.readLines(), baseFile)
+    } else
+    rewriteFile(resultFile.readLines(), baseFile)
+
     println(GREEN + "Write number of strings in your file (from 0 to 10000):")
     val strNumber = checkCorrectInput(0, 10000)
     println(GREEN + "Write length of strings in your file (from 0 to 1000):")
@@ -134,8 +155,12 @@ fun userChanger(baseFile: File, resultFile: File) {
     }
     println()
     println(GREEN + "You can change strings, add new, delete some, clear the file, print it or quite")
+    if (flagUserVersionControl) println(GREEN + "Also you can save current version of file, to compare next versions with this one (write 'save')")
     while (true) {
-        println(BLUE + "Write 'change', 'add', 'del', 'clear', 'print' or 'q'" + RESET)
+        print(BLUE + "Write 'change', 'add', 'del', 'clear', 'print'")
+        if (flagUserVersionControl)
+            print(", 'save'")
+        println(" or 'q'$RESET")
         when (readLine().toString()) {
             "Change", "change", "CHANGE" -> {
                 while (true) {
@@ -199,8 +224,18 @@ fun userChanger(baseFile: File, resultFile: File) {
                     println("${(index + 1).toString().padEnd(changingFile.size.toString().length)} $str")
                 }
             }
+            "Save", "save","SAVE" ->{
+                if (flagUserVersionControl) {
+                    rewriteFile(changingFile, baseFile)
+                    println(GREEN + "Version saved")
+                }
+                else
+                    println(RED + "Unknown command")
+            }
             "q", "Q" -> {
                 rewriteFile(changingFile, resultFile)
+                if (saveFile != changingFile && !flagUserVersionControl)
+                    rewriteFile(saveFile, baseFile)
                 return
             }
             else -> println(RED + "Unknown command")
