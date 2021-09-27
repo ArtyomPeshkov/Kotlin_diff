@@ -5,6 +5,7 @@ internal class TestOfRandomChanger {
     private val baseFile=File("src/test/resources/testBase.txt")
     private val resultFile=File("src/test/resources/testResult.txt")
 
+    //функция аналогична той, что используется в коде, но пользовательский ввод симулируется входными параметрами
     private fun randomChangerForTesting(baseFile: File, resultFile: File, strNumber:Int, strLength:Int, difChars:Int) {
         rewriteFile(resultFile.readLines(), baseFile)
         val newFile:MutableList<String> = mutableListOf()

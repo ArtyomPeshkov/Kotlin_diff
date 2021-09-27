@@ -2,7 +2,7 @@ import java.io.File
 import kotlin.test.*
 
 internal class TestOfCheckCorrectInput {
-
+    //функция аналогична той, что используется в коде, но пользовательский ввод симулируется входными параметрами
     private fun checkCorrectInput(minVal: Int, maxVal: Int, commands: List<String?>): Int {
         commands.forEach {
             if (it == null || it.toIntOrNull() == null || it.toInt() < minVal || it.toInt() > maxVal) {

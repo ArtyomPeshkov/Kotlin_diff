@@ -5,7 +5,8 @@ internal class TestOfUserChanger {
     private val baseFile=File("src/test/resources/testBase.txt")
     private val resultFile=File("src/test/resources/testResult.txt")
 
-    fun userChangerForTesting(baseFile: File, resultFile: File,commands:List<String>, nums:List<Int>,strings:List<String>) {
+    //функция аналогична той, что используется в коде, но пользовательский ввод симулируется входными параметрами
+    private fun userChangerForTesting(baseFile: File, resultFile: File,commands:List<String>, nums:List<Int>,strings:List<String>) {
         val saveFile = resultFile.readLines().toMutableList()
         val changingFile = resultFile.readLines().toMutableList()
         commands.forEachIndexed  {index,it ->

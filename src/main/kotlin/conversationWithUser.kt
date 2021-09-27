@@ -1,6 +1,6 @@
 import java.io.File
 
-var flagUserVersionControl = false;
+var flagUserVersionControl = false
 
 //Функция, запрашивающая у пользователя путь до нового файла
 fun newFileReader(): String {
@@ -8,7 +8,7 @@ fun newFileReader(): String {
     var resultFile: String? = readLine()
     while (true) {
         when {
-            (resultFile == null || !File(resultFile).exists()) -> println(RED + "Please write existing file")
+            (resultFile == null || resultFile.isBlank() || !File(resultFile).exists() || !File(resultFile).isFile) -> println(RED + "Please write existing file")
             (File(resultFile).absoluteFile == File("src/main/resources/base.txt").absoluteFile || File(resultFile).absoluteFile == File(
                 "src/test/resources/testResult.txt"
             ).absoluteFile || File(resultFile).absoluteFile == File("src/test/resources/testBase.txt").absoluteFile) -> println(
