@@ -3,14 +3,14 @@ import kotlin.test.*
 
 internal class TestOfCheckCorrectInput {
     //функция аналогична той, что используется в коде, но пользовательский ввод симулируется входными параметрами
-    private fun checkCorrectInput(minVal: Int, maxVal: Int, commands: List<String?>): Int {
+    private fun checkCorrectInput(minVal: Int, maxVal: Int, commands: List<String?>): Int? {
         commands.forEach {
             if (it == null || it.toIntOrNull() == null || it.toInt() < minVal || it.toInt() > maxVal) {
                return@forEach
             }
             return it.toInt()
         }
-        return -1
+        return null
     }
 
     @Test
@@ -29,5 +29,11 @@ internal class TestOfCheckCorrectInput {
     fun checkCorrectInputTest3() {
         val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","wqdf123","123","asff",null,"as2sf")
         assertEquals(123, checkCorrectInput(0,1000,commands))
+    }
+
+    @Test
+    fun checkCorrectInputTest4() {
+        val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","wqdf123","asff",null,"as2sf")
+        assertEquals(null, checkCorrectInput(0,1000,commands))
     }
 }
