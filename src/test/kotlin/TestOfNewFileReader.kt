@@ -3,7 +3,7 @@ import kotlin.test.*
 
 internal class TestOfNewFileReader {
     //функция аналогична той, что используется в коде, но пользовательский ввод симулируется входными параметрами
-    fun newFileReader(commands: List<String?>): String? {
+    private fun newFileReader(commands: List<String?>): String? {
         commands.forEach {
             when {
                 (it == null || it.isBlank() || !File(it).exists() || !File(it).isFile) -> return@forEach

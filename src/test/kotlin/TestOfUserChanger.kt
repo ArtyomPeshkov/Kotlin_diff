@@ -27,7 +27,7 @@ internal class TestOfUserChanger {
                     changingFile.removeAt(nums[index])
                 }
                 "clear" -> changingFile.clear()
-                "print" -> {/*не тестируется*/}
+                "print" -> {/*не требует тестирования*/}
                 "q" -> {
                     rewriteFile(changingFile, resultFile)
                     if (saveFile != changingFile)
