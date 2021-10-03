@@ -27,6 +27,7 @@ fun getRandomString(difChars: Int, length: Int): String {
 }
 
 fun main() {
+    File("src/main/resources/base.txt").createNewFile()
     val baseFile = File("src/main/resources/base.txt")
     println(GREEN + "Welcome to diff utility testing system")
     conversationWithUser(baseFile)
