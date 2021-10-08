@@ -96,7 +96,6 @@ fun test(baseFile: File, resultFile: File): Boolean {
 @return
 Массив индексов строк лежащих на соответственных позициях в наибольшей общей подпоследовательности
  */
-// Генерирует команды для тестирующей системы (работает аналогично printer, но ничего не выводит)
 fun stringForTestingSystemGenerator(baseFile: File,
                                     resultFile: File
 ): MutableList<String> {

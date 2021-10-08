@@ -11,7 +11,6 @@ var flagUserVersionControl = false
 @return
 Функция возвращает имя файла
  */
-//Функция, запрашивающая у пользователя путь до нового файла
 fun newFileReader(): String {
     println(BLUE + "Write$RED path to your file$BLUE (now you are in project folder)")
     var resultFile: String? = readLine()
