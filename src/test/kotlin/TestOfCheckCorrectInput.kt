@@ -14,25 +14,25 @@ internal class TestOfCheckCorrectInput {
     }
 
     @Test
-    fun checkCorrectInputTest1() {
+    fun checkCorrectInputTestNull() {
         val commands:List<String?> = listOf(null,"afaf","","1","3",null)
         assertEquals(1, checkCorrectInput(0,10,commands))
     }
 
     @Test
-    fun checkCorrectInputTest2() {
+    fun checkCorrectInputTestRange() {
         val commands:List<String?> = listOf(null,"afaf","","2","-1","3","0",null)
         assertEquals(0, checkCorrectInput(0,1,commands))
     }
 
     @Test
-    fun checkCorrectInputTest3() {
+    fun checkCorrectInputTestNumsInWords() {
         val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","wqdf123","123","asff",null,"as2sf")
         assertEquals(123, checkCorrectInput(0,1000,commands))
     }
 
     @Test
-    fun checkCorrectInputTest4() {
+    fun checkCorrectInputTestNoCorrectInput() {
         val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","wqdf123","asff",null,"as2sf")
         assertEquals(null, checkCorrectInput(0,1000,commands))
     }

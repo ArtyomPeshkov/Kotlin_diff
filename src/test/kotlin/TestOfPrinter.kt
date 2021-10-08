@@ -27,7 +27,7 @@ internal class TestOfPrinter {
     private val resultFile = File("src/test/resources/testResult.txt")
 
     @Test
-    fun printer1() {
+    fun printerBasic() {
         var input = mutableListOf("abc", "def", "klm", "abc", "sss")
         rewriteFile(input, baseFile)
         input = mutableListOf("aaa", "abc", "aaa", "dek", "klm", "ccc", "asf", "abc")
@@ -61,7 +61,7 @@ internal class TestOfPrinter {
     }
 
     @Test
-    fun printer2() {
+    fun printerEmptyStrings() {
         var input = mutableListOf("", "", "", "", "")
         rewriteFile(input, baseFile)
         input = mutableListOf("", "", "")
@@ -86,7 +86,7 @@ internal class TestOfPrinter {
     }
 
     @Test
-    fun printer3() {
+    fun printerNotOnlyEmpty() {
         var input = mutableListOf("abc", "", "klm", "bbb", "", "ccc")
         rewriteFile(input, baseFile)
         input = mutableListOf("aaa", "", "abc", "", "bbb", "def", "ccc", "", "klm", "asf")

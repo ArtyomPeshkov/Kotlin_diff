@@ -39,7 +39,7 @@ internal class TestOfUserChanger {
     }
 
     @Test
-    fun userChangerTest1() {
+    fun userChangerTestChangeAddDel() {
         rewriteFile(listOf("abc","def","klm","nop"),resultFile)
         val res = listOf("aaa","klm","def","nop")
         val commands:List<String> = listOf("change","add","del","q")
@@ -50,7 +50,7 @@ internal class TestOfUserChanger {
     }
 
     @Test
-    fun userChangerTest2() {
+    fun userChangerTestClear() {
         rewriteFile(listOf("abc","def","klm","nop"),resultFile)
         val res:List<String> = listOf()
         val commands:List<String> = listOf("clear","q")
@@ -60,7 +60,7 @@ internal class TestOfUserChanger {
         assert(res==resultFile.readLines())
     }
     @Test
-    fun userChangerTest3() {
+    fun userChangerTestAdd() {
         rewriteFile(listOf("111","111","111","111"),resultFile)
         val res = listOf("111","aaa","111","ddd","111","kkk","111","nnn")
         val commands:List<String> = listOf("add","change","add","change","add","change","add","change","q")
@@ -70,7 +70,7 @@ internal class TestOfUserChanger {
         assert(res==resultFile.readLines())
     }
     @Test
-    fun userChangerTest4() {
+    fun userChangerTestAddChange() {
         rewriteFile(listOf("111","111","111","111"),resultFile)
         val res = listOf("000","aaa","222","ddd","444","kkk","666","nnn")
         val commands:List<String> = listOf("change","add","change","add","change","add","change","add","q")
@@ -80,7 +80,7 @@ internal class TestOfUserChanger {
         assert(res==resultFile.readLines())
     }
     @Test
-    fun userChangerTest5() {
+    fun userChangerTestChangeDel() {
         rewriteFile(listOf("","111","","111","","111","","111"),resultFile)
         val res = listOf("000","111","222","333")
         val commands:List<String> = listOf("change","del","change","del","change","del","change","del","q")
@@ -90,7 +90,7 @@ internal class TestOfUserChanger {
         assert(res==resultFile.readLines())
     }
     @Test
-    fun userChangerTest6() {
+    fun userChangerTestClearAddDel() {
         rewriteFile(listOf("abc","def","klm","nop"),resultFile)
         val res = listOf("aaa","bbb","ccc")
         val commands:List<String> = listOf("clear","add","del","add","add","add","q")
@@ -100,7 +100,7 @@ internal class TestOfUserChanger {
         assert(res==resultFile.readLines())
     }
     @Test
-    fun userChangerTest7() {
+    fun userChangerTestClearAddChange() {
         rewriteFile(listOf("abc","def","klm","nop"),resultFile)
         val res = listOf("000","aaa","bbb","ccc")
         val commands:List<String> = listOf("clear","add","change","add","add","add","q")
@@ -110,7 +110,7 @@ internal class TestOfUserChanger {
         assert(res==resultFile.readLines())
     }
     @Test
-    fun userChangerTest8() {
+    fun userChangerTestExitInTheMiddle() {
         rewriteFile(listOf("abc","def","klm","nop"),resultFile)
         val res = listOf("aaa","bbb","abc","def","klm","nop")
         val commands:List<String> = listOf("add","change","add","q","add","add")
@@ -120,7 +120,7 @@ internal class TestOfUserChanger {
         assert(res==resultFile.readLines())
     }
     @Test
-    fun userChangerTest9() {
+    fun userChangerTestChange() {
         rewriteFile(listOf("abc","def","klm","nop"),resultFile)
         val res = listOf("","","")
         val commands:List<String> = listOf("change","change","change","del","q")

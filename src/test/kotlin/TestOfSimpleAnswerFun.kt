@@ -16,41 +16,41 @@ internal class TestOfSimpleAnswerFun {
 
 
     @Test
-    fun checkCorrectInputTest1() {
+    fun checkCorrectInputTesty() {
         val commands:List<String?> = listOf(null,"afaf","","1","3",null,"y")
         assertEquals(true, simpleAnswerForQuestion(commands))
     }
 
     @Test
-    fun checkCorrectInputTest2() {
+    fun checkCorrectInputTestn() {
         val commands:List<String?> = listOf(null,"afaf","","2","-1","3","0",null,"n")
         assertEquals(false, simpleAnswerForQuestion(commands))
     }
 
     @Test
-    fun checkCorrectInputTest3() {
+    fun checkCorrectInputTestY() {
         val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","wqdf123","123","asff",null,"as2sf","Y")
         assertEquals(true, simpleAnswerForQuestion(commands))
     }
 
     @Test
-    fun checkCorrectInputTest4() {
+    fun checkCorrectInputTestNo() {
         val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","No","wqdf123","123","asff",null,"as2sf","Y")
         assertEquals(false, simpleAnswerForQuestion(commands))
     }
 
     @Test
-    fun checkCorrectInputTest5() {
+    fun checkCorrectInputTestYES() {
         val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","wqdf123","YES","123","asff",null,"as2sf","Y")
         assertEquals(true, simpleAnswerForQuestion(commands))
     }
     @Test
-    fun checkCorrectInputTest6() {
+    fun checkCorrectInputTestNO() {
         val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","wqdf123","NO","123","asff",null,"as2sf","Y")
         assertEquals(false, simpleAnswerForQuestion(commands))
     }
     @Test
-    fun checkCorrectInputTest7() {
+    fun checkCorrectInputTestNoCorrect() {
         val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","wqdf123","123","asff",null,"as2sf")
         assertEquals(null, simpleAnswerForQuestion(commands))
     }

@@ -17,27 +17,22 @@ internal class TestOfNewFileReader {
     }
 
     @Test
-    fun checkCorrectInputTest1() {
-        val commands:List<String?> = listOf(null,"afaf","","1","3",null,"y")
+    fun checkCorrectInputTestNoCorrect() {
+        val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","No","wqdf123","123","asff",null,"as2sf","Y")
         assertEquals(null, newFileReader(commands))
     }
 
     @Test
-    fun checkCorrectInputTest2() {
+    fun checkCorrectInputTestLockedNameUsing() {
         val commands:List<String?> = listOf(null,"src/main/resources/base.txt","","2","src/test/resources/testResult.txt","-1","3","0",null,"n","src/test/resources/testBase.txt")
         assertEquals(null, newFileReader(commands))
     }
 
     @Test
-    fun checkCorrectInputTest3() {
+    fun checkCorrectInputTestCorrect() {
         val commands:List<String?> = listOf(null,"src/main/resources/base.txt","","2","src/test/resources/testResult.txt","-1","3","0",null,"n","src/test/resources/testBase.txt","src/main/resources/file.txt")
         assertEquals("src/main/resources/file.txt", newFileReader(commands))
     }
 
-    @Test
-    fun checkCorrectInputTest4() {
-        val commands:List<String?> = listOf(null,"afaf","","1ewfe234","12fqwf","No","wqdf123","123","asff",null,"as2sf","Y")
-        assertEquals(null, newFileReader(commands))
-    }
 
 }

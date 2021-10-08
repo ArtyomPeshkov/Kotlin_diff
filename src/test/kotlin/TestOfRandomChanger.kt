@@ -18,7 +18,7 @@ internal class TestOfRandomChanger {
     }
 
     @Test
-    fun randomChangerTest1() {
+    fun randomChangerTestBigRange() {
         val strNumber=10000
         var strNumberF=false
         val strLength=1000
@@ -41,7 +41,7 @@ internal class TestOfRandomChanger {
     }
 
     @Test
-    fun randomChangerTest2() {
+    fun randomChangerTestSmallRange() {
         val strNumber=10
         var strNumberF=false
         val strLength=10
@@ -63,7 +63,7 @@ internal class TestOfRandomChanger {
         assert(strNumberF && strLengthF && difCharsF)
     }
     @Test
-    fun randomChangerTest3() {
+    fun randomChangerTestZeroStrings() {
         val strNumber=0
         var strNumberF=false
         val strLength=1000
@@ -86,7 +86,7 @@ internal class TestOfRandomChanger {
         assert(strNumberF && strLengthF && difCharsF)
     }
     @Test
-    fun randomChangerTest4() {
+    fun randomChangerTestZeroLengthStrings() {
         val strNumber=100
         var strNumberF=false
         val strLength=0
